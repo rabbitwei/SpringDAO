@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!--========================数据库连接并使用c3p0数据库连接池=================================-->
     <!--
@@ -39,6 +39,7 @@
     <!--========================数据库连接并使用c3p0数据库连接池=================================-->
 
 
+    <!--使用注解的方式-->
     <!--========================================事务管理=======================================-->
     <!--首先，我们要配置事务的管理器类：因为JDBC和Hibernate的事务控制是不同的。-->
     <!--1.配置事务的管理器类:JDBC-->
@@ -47,24 +48,9 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <!--再而，配置事务管理器类如何管理事务-->
-    <!--2.配置如何管理事务-->
-    <tx:advice id="txAdvice" transaction-manager="txManage">
-        <!--配置事务的属性-->
-        <tx:attributes>
-            <!--所有的方法，并不是只读-->
-            <tx:method name="*" read-only="false"/>
-        </tx:attributes>
-    </tx:advice>
-
-    <!--最后，配置拦截哪些方法, spring jdbc 的事务管理是基于 aop 操作的-->
-    <!--3.配置拦截哪些方法+事务的属性-->
-    <aop:config>
-        <!--拦截的方法-->
-        <aop:pointcut id="pt" expression="execution(* cn.rabbit.service.*(..))"/>
-        <!--事务属性-->
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="pt"/>
-    </aop:config>
+    <!--开启以注解的方式实现事务控制-->
+    <!--注意：这个的 schema 文件要找对-->
+    <tx:annotation-driven transaction-manager="txManage"/>
     <!--========================================事务管理=======================================-->
 
 </beans>
